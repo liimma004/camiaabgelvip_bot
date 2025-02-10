@@ -4,7 +4,7 @@ const TelegramBot = require('node-telegram-bot-api');
 // Variáveis de ambiente
 const token = process.env.TELEGRAM_BOT_TOKEN; // Use variáveis de ambiente
 const app = express();
-const port = process.env.PORT || 3000; // Usa a porta fornecida pelo Render
+const port = process.env.PORT || 3000; // 3000 para desenvolvimento loca
 
 // Crie o bot com webhook
 const bot = new TelegramBot(token, { webHook: { port } });
