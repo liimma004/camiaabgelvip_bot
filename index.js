@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const token = process.env.TOKEN || '7839054741:AAGZO4sqDXiLPljvHPKk2fzi9niq3wm_48w';
 
 // Domínio onde o bot será hospedado
-const domain = 'https://camilaangelvipbot.onrender.com';
+const domain = 'https://camiaabgelvip-bot.onrender.com';
 
 // Inicializa o bot com webhook
 const bot = new TelegramBot(token, { webHook: { port: process.env.PORT || 5000 } });
