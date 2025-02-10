@@ -1,32 +1,9 @@
 const TelegramBot = require('node-telegram-bot-api');
-const express = require('express');
-const bodyParser = require('body-parser');
+const token = '7839054741:AAGZO4sqDXiLPljvHPKk2fzi9niq3wm_48w'; // Remplacez par votre token
+const bot = new TelegramBot(token, { polling: true });
 
-// Token do bot (use variável de ambiente)
-const token = process.env.TOKEN || '7839054741:AAGZO4sqDXiLPljvHPKk2fzi9niq3wm_48w';
-
-// Domínio onde o bot será hospedado
-const domain = 'https://camiaabgelvip-bot.onrender.com';
-
-// Inicializa o bot com webhook
-const bot = new TelegramBot(token, { webHook: { port: process.env.PORT || 5000 } });
-
-// Define o URL do webhook
-const url = `${domain}/bot${token}`;
-bot.setWebHook(url);
-
-// Inicializa o servidor Express
-const app = express();
-app.use(bodyParser.json());
-
-// Rota para receber as atualizações do Telegram
-app.post(`/bot${token}`, (req, res) => {
-    bot.processUpdate(req.body);
-    res.sendStatus(200);
-});
-
-// Dados do produto
-const productPhoto = 'https://i.postimg.cc/pV5KwYF0/500-X500-Capa.png';
+// Données du produit
+const productPhoto = 'https://i.postimg.cc/pV5KwYF0/500-X500-Capa.png'; // Lien direct de l'image
 const productDescription = `
 Bienvenue dans mon monde 😈 Dans mon VIP vous trouverez :
 • Sensuel. •Explicite
@@ -34,6 +11,7 @@ Bienvenue dans mon monde 😈 Dans mon VIP vous trouverez :
 • Fétiches. •Cosplay🔥
 Êtes-vous prêt pour le meilleur contenu auquel vous ne vous êtes jamais abonné ?
 😏À bientôt ! Cliquez sur /démarrer💦
+
 • Fellation / orale
 • Pénétration anale
 • Pénétration vaginale
@@ -41,15 +19,18 @@ Bienvenue dans mon monde 😈 Dans mon VIP vous trouverez :
 • Vidéos/photos de seins
 • Vidéo de masturbation avec Squit
 • Vidéos utilisant des accessoires érotiques
+
 Tarifs 👇🏻
 Tarif journalier 8 EUR 🇪🇺
 Hebdomadaire 16 EUR 🇪🇺
 Mensuel 64 EUR 🇪🇺
 Dans la vie 250 EUR 🇪🇺
+
 Tarif journalier 8,26 USD🇺🇸
 Semaine 16,52 USD 🇺🇸
 Mensuel 66,10 USD 🇺🇸
 Dans la vie 258,19 USD 🇺🇸
+
 Tarif   30,35 AED🇦🇪
 Semaine 60,69 AED 🇦🇪
 Mensuel 242,76 AED 🇦🇪
@@ -57,7 +38,7 @@ Dans la 948,00 AED 🇦🇪
 ACHETEZ ET OBTENEZ UN ACCÈS IMMÉDIAT✅
 `;
 
-// Tabela de preços
+// Tableaux de prix
 const prices = {
     EUR: {
         'TARIF JOURNALIER': '8€ EUR',
@@ -79,12 +60,14 @@ const prices = {
     },
 };
 
-// Métodos de pagamento com dados bancários
+// Méthodes de paiement avec données bancaires
 const paymentMethods = {
     EUR: {
         IBAN: `
 💳 **Coordonnées Bancaires pour EUR 🇪🇺** 💳
+
 • **IBAN**: BE85905272191606
+
 ⚠️ **ATTENTION** ⚠️
 Vous devez entrer le montant exact de votre achat. Si vous entrez un montant incorrect, vous ne serez pas ajouté au VIP. En cas d'erreur, contactez le support.
 `,
@@ -92,19 +75,25 @@ Vous devez entrer le montant exact de votre achat. Si vous entrez un montant inc
     USD: {
         'Swift/BIC': `
 💳 **Coordonnées Bancaires pour USD 🇺🇸** 💳
+
 • **Swift/BIC**: TRWIUS35XXX
+
 ⚠️ **ATTENTION** ⚠️
 Vous devez entrer le montant exact de votre achat. Si vous entrez un montant incorrect, vous ne serez pas ajouté au VIP. En cas d'erreur, contactez le support.
 `,
         Deposit: `
 💳 **Coordonnées Bancaires pour USD 🇺🇸** 💳
+
 • **Deposit**: 331652012800460
+
 ⚠️ **ATTENTION** ⚠️
 Vous devez entrer le montant exact de votre achat. Si vous entrez un montant incorrect, vous ne serez pas ajouté au VIP. En cas d'erreur, contactez le support.
 `,
         'Routing Number': `
 💳 **Coordonnées Bancaires pour USD 🇺🇸** 💳
+
 • **Routing Number**: 084009519
+
 ⚠️ **ATTENTION** ⚠️
 Vous devez entrer le montant exact de votre achat. Si vous entrez un montant incorrect, vous ne serez pas ajouté au VIP. En cas d'erreur, contactez le support.
 `,
@@ -112,28 +101,30 @@ Vous devez entrer le montant exact de votre achat. Si vous entrez un montant inc
     AED: {
         IBAN: `
 💳 **Coordonnées Bancaires pour AED 🇦🇪** 💳
+
 • **IBAN**: GB63TRWI23080110420713
+
 ⚠️ **ATTENTION** ⚠️
 Vous devez entrer le montant exact de votre achat. Si vous entrez un montant incorrect, vous ne serez pas ajouté au VIP. En cas d'erreur, contactez le support.
 `,
     },
 };
 
-// Estado do usuário
+// État de l'utilisateur
 let userState = {};
 
-// Link do Grupo VIP
-const groupLink = 'https://t.me/+Y19uFrAjUP0zMzU5'; // Link do grupo VIP
+// Lien du Groupe VIP
+const groupLink = 'https://t.me/+Y19uFrAjUP0zMzU5'; // Lien du groupe VIP
 
-// Comando /start
+// Commande /start
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    userState[chatId] = {}; // Inicializa o estado do usuário
-    console.log(`Comando /start recebido de chatId: ${chatId}`);
-    // Envia a foto e a descrição do produto
+    userState[chatId] = {}; // Initialise l'état de l'utilisateur
+
+    // Envoie la photo et la description du produit
     bot.sendPhoto(chatId, productPhoto, { caption: productDescription })
         .then(() => {
-            // Exibe o teclado inline com a opção "Choisir la Devise"
+            // Affiche le clavier inline avec l'option "Choisir la Devise"
             bot.sendMessage(chatId, 'Choisissez une option :', {
                 reply_markup: {
                     inline_keyboard: [
@@ -148,7 +139,7 @@ bot.onText(/\/start/, (msg) => {
         });
 });
 
-// Callback queries
+// Choix de la devise (clavier inline)
 bot.on('callback_query', (query) => {
     const chatId = query.message.chat.id;
     const data = query.data;
@@ -166,18 +157,22 @@ bot.on('callback_query', (query) => {
             },
         });
     } else if (data.startsWith('currency_')) {
-        const currency = data.split('_')[1]; // Extrai a moeda (EUR, USD, AED)
+        const currency = data.split('_')[1]; // Extrait la devise (EUR, USD, AED)
         userState[chatId].currency = currency;
-        // Define o emoji correto para a moeda
+
+        // Définit le drapeau correct pour la devise
         const flag = {
             EUR: '🇪🇺',
             USD: '🇺🇸',
             AED: '🇦🇪',
         }[currency];
+
         const priceTable = Object.entries(prices[currency])
             .map(([plan, price]) => `• **${plan}** : ${price}`)
             .join('\n');
+
         const message = `${flag} **PRIX EN ${currency}** ${flag}\n\n${priceTable}`;
+
         bot.sendMessage(chatId, message, {
             parse_mode: 'Markdown',
             reply_markup: {
@@ -189,16 +184,19 @@ bot.on('callback_query', (query) => {
         });
     } else if (data === 'choose_plan') {
         const currency = userState[chatId].currency;
-        // Define o emoji correto para a moeda
+
+        // Définit le drapeau correct pour la devise
         const flag = {
             EUR: '🇪🇺',
             USD: '🇺🇸',
             AED: '🇦🇪',
         }[currency];
-        // Cria botões inline para os planos
+
+        // Crée des boutons inline pour les plans
         const planButtons = Object.keys(prices[currency]).map((plan) => [
             { text: `${plan} ${flag}`, callback_data: `plan_${plan}` },
         ]);
+
         bot.sendMessage(chatId, `Choisissez le plan ${flag} :`, {
             reply_markup: {
                 inline_keyboard: [
@@ -208,26 +206,31 @@ bot.on('callback_query', (query) => {
             },
         });
     } else if (data.startsWith('plan_')) {
-        const plan = data.split('_')[1]; // Extrai o plano escolhido
+        const plan = data.split('_')[1]; // Extrait le plan choisi
         userState[chatId].plan = plan;
+
         const currency = userState[chatId].currency;
         const paymentOptions = Object.keys(paymentMethods[currency]).map((method) => [
             { text: method, callback_data: `payment_${method}` },
         ]);
+
         bot.sendMessage(chatId, 'Choisissez le mode de paiement :', {
             reply_markup: {
                 inline_keyboard: [
                     ...paymentOptions,
-                    [{ text: 'Retour', callback_data: `plan_${userState[chatId].plan}` }],
+                    [{ text: 'Retour', callback_data: 'choose_plan' }],
                 ],
             },
         });
     } else if (data.startsWith('payment_')) {
-        const method = data.split('_')[1]; // Extrai o método de pagamento
+        const method = data.split('_')[1]; // Extrait le mode de paiement
         const currency = userState[chatId].currency;
+
         const paymentInstruction = paymentMethods[currency][method];
+
         bot.sendMessage(chatId, paymentInstruction, { parse_mode: 'Markdown' });
-        // Solicita o envio do comprovante de pagamento
+
+        // Demande l'envoi du justificatif de paiement
         bot.sendMessage(chatId, 'Veuillez envoyer le justificatif de paiement dans le chat.', {
             reply_markup: {
                 inline_keyboard: [
@@ -238,22 +241,19 @@ bot.on('callback_query', (query) => {
     }
 });
 
-// Recebe os comprovantes de pagamento
+// Reçoit les justificatifs de paiement
 bot.on('document', (msg) => {
     const chatId = msg.chat.id;
     const currency = userState[chatId].currency;
     const plan = userState[chatId].plan;
-    // Confirma a recepção do comprovante
+
+    // Confirme la réception du justificatif
     bot.sendMessage(chatId, 'Justificatif reçu ! Veuillez patienter pendant la confirmation du paiement...');
-    // Simulação de confirmação do pagamento
+
+    // Simulation de confirmation du paiement
     setTimeout(() => {
         bot.sendMessage(chatId, `✅ Paiement confirmé ! Accès immédiatement libéré.\n\nCliquez sur le lien ci-dessous pour accéder au groupe VIP :\n${groupLink}`);
-    }, 3000); // Simula um tempo de verificação
+    }, 3000); // Simule un temps de vérification
 });
 
-// Inicia o servidor
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-    console.log(`Webhook configurado para: ${url}`);
-});
+console.log('Le bot est en cours d\'exécution...');
