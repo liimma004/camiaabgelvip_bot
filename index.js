@@ -2,8 +2,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-// Token do bot (agora vem da variável de ambiente)
-const token = process.env.TOKEN; // Substitui o token direto pelo valor da variável de ambiente
+// Token do bot (use variável de ambiente)
+const token = process.env.TOKEN || '7839054741:AAGZO4sqDXiLPljvHPKk2fzi9niq3wm_48w'; // Substitua pelo seu token
 
 // Domínio onde o bot será hospedado
 const domain = 'https://camilaangelvipbot.onrender.com';
@@ -25,7 +25,6 @@ app.post(`/bot${token}`, (req, res) => {
     res.sendStatus(200);
 });
 
-// Restante do código do bot (mantenha o mesmo)
 // Dados do produto
 const productPhoto = 'https://i.postimg.cc/pV5KwYF0/500-X500-Capa.png';
 const productDescription = `
@@ -40,7 +39,7 @@ Bienvenue dans mon monde 😈 Dans mon VIP vous trouverez :
 // Estado do usuário
 let userState = {};
 
-// Lógica do bot (comandos, callbacks, etc.)
+// Comando /start
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     userState[chatId] = {};
