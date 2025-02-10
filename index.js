@@ -243,4 +243,27 @@ bot.on('callback_query', (query) => {
         bot.sendMessage(chatId, 'Veuillez envoyer le justificatif de paiement dans le chat.', {
             reply_markup: {
                 inline_keyboard: [
-                    [{ text: 'Retour', callback_data: `plan_${userState[chatId].
+                    [{ text: 'Retour', callback_data: `plan_${userState[chatId].plan}` }],
+                ],
+            },
+        });
+    }
+});
+
+// Reçoit les justificatifs de paiement
+bot.on('document', (msg) => {
+    const chatId = msg.chat.id;
+    const currency = userState[chatId].currency;
+    const plan = userState[chatId].plan;
+    // Confirme la réception du justificatif
+    bot.sendMessage(chatId, 'Justificatif reçu ! Veuillez patienter pendant la confirmation du paiement...');
+    // Simulation de confirmation du paiement
+    setTimeout(() => {
+        bot.sendMessage(chatId, `✅ Paiement confirmé ! Accès immédiatement libéré.\n\nCliquez sur le lien ci-dessous pour accéder au groupe VIP :\n${groupLink}`);
+    }, 3000); // Simule un temps de vérification
+});
+
+// Inicie o servidor
+app.listen(port, () => {
+    console.log(`Servidor rodando na porta ${port}`);
+});
